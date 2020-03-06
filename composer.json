@@ -24,7 +24,7 @@
   },
   "repositories":[
     {
-      "type": "vcs",
+      "type": "git",
       "url": "https://github.com/Hamza-sudo/WeviooCacheBundle.git"
     }
   ],
