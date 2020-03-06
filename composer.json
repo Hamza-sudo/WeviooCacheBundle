@@ -29,8 +29,8 @@
     }
   },
   "scripts": {
-    "pre-install-cmd": [
-      "config-cache"
-    ]
+    "auto-scripts": {
+      "config-cache": "symfony-cmd"
+    }
   }
 }
