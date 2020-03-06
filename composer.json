@@ -20,7 +20,8 @@
     "symfony/cache": "^4.3.3|^5.0",
     "symfony/config": "^4.3.3|^5.0",
     "symfony/console": "^3.4.30|^4.3.3|^5.0",
-    "symfony/dependency-injection": "^4.3.3|^5.0"
+    "symfony/dependency-injection": "^4.3.3|^5.0",
+    "predis/predis": "^1.1"
   },
   "autoload": {
     "psr-4": {
