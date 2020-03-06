@@ -1,0 +1,30 @@
+{
+  "name": "Wevioo/WeviooCache-bundle",
+  "type": "symfony-bundle",
+  "version": "0.0.1",
+  "description": "Cool and reusable bundle for symfony cache",
+  "keywords": [
+    "Cache",
+    "Symfony_cache",
+    "Data"
+  ],
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Wevioo",
+      "email": "contact@wevioo.com"
+    }
+  ],
+  "require": {
+    "php": "^7.1",
+    "symfony/cache": "^4.3.3|^5.0",
+    "symfony/config": "^4.3.3|^5.0",
+    "symfony/console": "^3.4.30|^4.3.3|^5.0",
+    "symfony/dependency-injection": "^4.3.3|^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Wevioo\\WeviooCacheBundle\\": ""
+    }
+  }
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+
+        <service id="wevioo.wevioo_cache.wevioo_cache" class="Wevioo\WeviooCacheBundle\Component\WeviooCache" public="true">
+            <argument type="service" id="cache.app" />
+        </service>
+
+        <service id="wevioo.wevioo_cache.cache_config" class="Wevioo\WeviooCacheBundle\Command\ConfigCacheCommand" public="true">
+            <tag name="console.command" command="config-cache" />
+        </service>
+
+    </services>
+</container>
