@@ -15,10 +15,15 @@ class WeviooCacheExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         //dd($config);
-        $container->setParameter('wevioo.wevioo_cache',$config['wevioo_cache']);
+        $container->setParameter('wevioo.wevioo_cache.wevioo_cache',$config['wevioo_cache']);
         //dd($container);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+    }
+
+    public function getAlias()
+    {
+        return 'wevioo.wevioo_cache.wevioo_cache';
     }
 
 }

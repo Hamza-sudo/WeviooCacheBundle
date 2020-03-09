@@ -8,6 +8,8 @@
         <service id="wevioo.wevioo_cache.wevioo_cache" class="Wevioo\WeviooCacheBundle\Component\WeviooCache" public="true">
             <argument type="service" id="cache.app" />
         </service>
+        <service id="Wevioo\WeviooCacheBundle\Component\WeviooCache" alias="wevioo.wevioo_cache.wevioo_cache" public="false" />
+
 
         <service id="wevioo.wevioo_cache.cache_config" class="Wevioo\WeviooCacheBundle\Command\ConfigCacheCommand" public="true">
             <tag name="console.command" command="config-cache" />
