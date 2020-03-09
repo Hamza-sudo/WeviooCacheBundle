@@ -1,5 +1,5 @@
 {
-  "name": "Wevioo/WeviooCache-bundle",
+  "name": "wevioo/weviooCache-bundle",
   "type": "symfony-bundle",
   "version": "0.0.1",
   "description": "Cool and reusable bundle for symfony cache",
