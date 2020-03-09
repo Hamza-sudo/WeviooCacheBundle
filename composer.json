@@ -2,6 +2,7 @@
   "name": "wevioo/wevioo-cache-bundle",
   "type": "symfony-bundle",
   "version": "0.0.1",
+  "license": "MIT",
   "description": "Cool and reusable bundle for symfony cache",
   "keywords": [
     "Cache",
