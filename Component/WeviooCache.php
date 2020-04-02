@@ -9,14 +9,91 @@ use Symfony\Component\Yaml\Yaml;
 class WeviooCache
 {
     private $cache;
-    private $apiConfig;
-    private $redisConfig;
-    private $mysqlConfig;
+    private $type;
+    private $host;
+    private $port;
+    private $username;
+    private $password;
+    private $db_name;
+
 
     public function __construct(AdapterInterface $cache)
     {
         $this->cache = $cache;
     }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getHost(): ?string
+    {
+        return $this->host;
+    }
+
+    public function setHost(string $host): self
+    {
+        $this->host = $host;
+
+        return $this;
+    }
+
+    public function getPort(): ?string
+    {
+        return $this->port;
+    }
+
+    public function setPort(string $port): self
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getDbName(): ?string
+    {
+        return $this->db_name;
+    }
+
+    public function setDbName(?string $db_name): self
+    {
+        $this->db_name = $db_name;
+
+        return $this;
+    }
+
 
     /**
      *
@@ -55,30 +132,51 @@ class WeviooCache
      */
     public function getCache($source, $name)
     {
-        if($source === 'API') {
-            return null;
-        } else if($source === 'REDIS') {
-            $config = $this->configurationsCache('../config/wevioo_cache.yaml',$source);
-            $client = RedisAdapter::createConnection("redis://".$config['host'].":".$config['port']);
-            $cache = new RedisAdapter($client);
-            $cached = $cache->getItem($name);
-            if ($cached->isHit()) {
-                return $cached->get();
+        if (file_exists('../config/wevioo_cache.yaml')) {
+            if($source === 'API') {
+                return null;
+            } else if($source === 'REDIS') {
+                $config = $this->configurationsCache('../config/wevioo_cache.yaml',$source);
+                $client = RedisAdapter::createConnection("redis://".$config['host'].":".$config['port']);
+                $cache = new RedisAdapter($client);
+                $cached = $cache->getItem($name);
+                if ($cached->isHit()) {
+                    return $cached->get();
+                }
+                return null;
+            } else if($source === 'MYSQL') {
+                $config = $this->configurationsCache('../config/wevioo_cache.yaml',$source);
+                $cache = new PdoAdapter("mysql://".$config['user'].":".$config['pwd']."@".$config['host'].":".$config['port']."/".$config['db_name']);
+                $cached = $cache->getItem($name);
+                if ($cached->isHit()) {
+                    return $cached->get();
+                }
+                return null;
             }
-            return null;
-        } else if($source === 'MYSQL') {
-            $config = $this->configurationsCache('../config/wevioo_cache.yaml',$source);
-            $cache = new PdoAdapter("mysql://".$config['user'].":".$config['pwd']."@".$config['host'].":".$config['port']."/".$config['db_name']);
-            $cached = $cache->getItem($name);
-            if ($cached->isHit()) {
-                return $cached->get();
-            }
-            return null;
         }
-
         else {
-            return null;
+            if($source === 'API') {
+                return null;
+            } else if($source === 'REDIS') {
+                $config = array('host' =>$this->getHost(),'port'=>$this->getPort());
+                $client = RedisAdapter::createConnection("redis://".$config['host'].":".$config['port']);
+                $cache = new RedisAdapter($client);
+                $cached = $cache->getItem($name);
+                if ($cached->isHit()) {
+                    return $cached->get();
+                }
+                return null;
+            } else if($source === 'MYSQL') {
+                $config = array('host' =>$this->getHost(),'port'=>$this->getPort(),'user'=>$this->getUsername(),'pwd'=>$this->getPassword(),'db_name'=>$this->getDbName());
+                $cache = new PdoAdapter("mysql://".$config['user'].":".$config['pwd']."@".$config['host'].":".$config['port']."/".$config['db_name']);
+                $cached = $cache->getItem($name);
+                if ($cached->isHit()) {
+                    return $cached->get();
+                }
+                return null;
+            }
         }
+        return null;
 
     }
 
@@ -91,23 +189,45 @@ class WeviooCache
      */
 
     public function saveCache($data, $source, $name, $expired) {
-        if($source === 'API') {
-            return null;
-        } else if($source === 'REDIS') {
-            $config = $this->configurationsCache('../config/wevioo_cache.yaml',$source);
-            $client = RedisAdapter::createConnection("redis://".$config['host'].":".$config['port']);
-            $cache = new RedisAdapter($client);
-            $cached = $cache->getItem($name);
-            $cached->set($data);
-            $cached->expiresAfter($expired);
-            $cache->save($cached);
-        } else if($source === 'MYSQL') {
-            $config = $this->configurationsCache('../config/wevioo_cache.yaml',$source);
-            $cache = new PdoAdapter("mysql://".$config['user'].":".$config['pwd']."@".$config['host'].":".$config['port']."/".$config['db_name']);
-            $cached = $cache->getItem($name);
-            $cached->set($data);
-            $cached->expiresAfter($expired);
-            $cache->save($cached);
+        if (file_exists('../config/wevioo_cache.yaml')) {
+            if($source === 'API') {
+                return null;
+            } else if($source === 'REDIS') {
+                $config = $this->configurationsCache('../config/wevioo_cache.yaml',$source);
+                $client = RedisAdapter::createConnection("redis://".$config['host'].":".$config['port']);
+                $cache = new RedisAdapter($client);
+                $cached = $cache->getItem($name);
+                $cached->set($data);
+                $cached->expiresAfter($expired);
+                $cache->save($cached);
+            } else if($source === 'MYSQL') {
+                $config = $this->configurationsCache('../config/wevioo_cache.yaml',$source);
+                $cache = new PdoAdapter("mysql://".$config['user'].":".$config['pwd']."@".$config['host'].":".$config['port']."/".$config['db_name']);
+                $cached = $cache->getItem($name);
+                $cached->set($data);
+                $cached->expiresAfter($expired);
+                $cache->save($cached);
+            }
+        }
+        else {
+            if($source === 'API') {
+                return null;
+            } else if($source === 'REDIS') {
+                $config = array('host' =>$this->getHost(),'port'=>$this->getPort());
+                $client = RedisAdapter::createConnection("redis://".$config['host'].":".$config['port']);
+                $cache = new RedisAdapter($client);
+                $cached = $cache->getItem($name);
+                $cached->set($data);
+                $cached->expiresAfter($expired);
+                $cache->save($cached);
+            } else if($source === 'MYSQL') {
+                $config = array('host' =>$this->getHost(),'port'=>$this->getPort(),'user'=>$this->getUsername(),'pwd'=>$this->getPassword(),'db_name'=>$this->getDbName());
+                $cache = new PdoAdapter("mysql://".$config['user'].":".$config['pwd']."@".$config['host'].":".$config['port']."/".$config['db_name']);
+                $cached = $cache->getItem($name);
+                $cached->set($data);
+                $cached->expiresAfter($expired);
+                $cache->save($cached);
+            }
         }
         return null;
     }
